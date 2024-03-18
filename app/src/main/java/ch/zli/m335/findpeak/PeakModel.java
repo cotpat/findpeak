@@ -1,6 +1,6 @@
 package ch.zli.m335.findpeak;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class PeakModel {
     private int height;
@@ -8,7 +8,7 @@ public class PeakModel {
     private double lati;
     private double longi;
     private boolean checked;
-    public List<PeakModel> PeakModels;
+    public ArrayList<PeakModel> PeakModels;
 
     public PeakModel(
             int height,
@@ -53,8 +53,6 @@ public class PeakModel {
                 - 0.0436 * Math.pow(y, 3)
         * 100 / 36;
 
-        double[] result = {lati, longi};
-
-        return result;
+        return new double[]{lati, longi};
     }
 }
