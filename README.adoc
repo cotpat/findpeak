@@ -1,0 +1,58 @@
+= FindPeak
+
+== FindPeak: funktionale & nicht-funktionale Anforderungen
+
+=== funktionale Anforderungen
+
+|===
+|Anforderung|ID|Akteur|Akzeptanzkriterien
+|Die App kann Position & Ausrichtung des Nutzers ermitteln.|1|`LocationService`|`LocationService` kann die Position des Nutzers sowie seine Ausrichtung korrekt aus den Sensoren auslesen.
+|Die App kann aus einer in der App gespeicherten Liste an Gipfeln den nächstgelegenen anzeigen.|2|`PeakService`|`PeakService` kann aufgrund von Positionsdaten aus dem `LocationService` das nächstgelegene `PeakModel` ausgeben.
+|Die App kann den Namen und die Höhe des nächstgelegenen Gipfels anzeigen sowie ein Kompasswidget, das in Richtung des Gipfels zeigt.|3|`MainActivity`|Auf der Grundlage von Daten aus `PeakService` und `LocationService` rendert `MainActivity` eine Benutzeroberfläche, welche den Namen des Gipfels, seine Höhe, seine Distanz zum aktuellen Punkt und seine Richtung mithilf eines Kompasswidgets anzeigt.
+|Die App kann die Distanz und Richtung zum Gipfel ermitteln und anzeigen.|4|`PeakService`|`PeakService` kann mit Positions- und Ausrichtungsdaten die Distanz und Deklination zwischen aktueller Lage und Zielgipfel berechnen und ausgeben.
+|Der Nutzer kann in der Activity den automatisch gewählten Gipfel anschauen und sich zu ihm ausrichten.|5|`User`|Der `User` kann die von `MainActivity` gerenderte Activity anschauen und sieht alles auf einer View.
+|Der Nutzer kann einen Gipfel abhaken. Der Gipfel wird dann in der Suche der nächstegelegenen Gipfel nicht mehr berücksichtigt.|6|`User`|Der `User` kann eine Checkbox auf der View betätigen, worauf der Gipfel in zukünftigen Abfragen nicht mehr berücksichtigt wird.
+|Nach dem Abhaken oder beim Wiederöffnen der App wird wiederum der nächstgelegene Gipfel gesucht.|7|`MainActivity`|Beim Abhaken triggert `MainActivity` die Ermittelung des neuen nächstgelegenen Gipfels mit den entsprechenden Abfragen auf `PeakService` und `LocationService`.
+|===
+
+=== nicht-funktionale Anforderungen
+
+|===
+
+|Anforderung|ID|Motivation|Akzeptanzkriterium
+|Die App verwendet zwei Services, um Testbarkeit, Flexibilität und Ausbaufähigkeit zu gewährleisten.|8|Supportability (Services können separat getestet werden; MainActivity kann einfacher ergänzt oder eine neue Activity hinzugefügt werden)|Zwei Services wurden programmiert und werden in der Applikation verwendet.
+|Alle user-facing strings sind einfach und zentralisiert zu übersetzen.|9|Supportability (die Entwicklung kann unabhängig von der Zielsprache durchgeführt werden; die Übersetzung erfordert keine besonderen Programmierkenntnisse; neue Sprachen können einfach hinzugefügt werden)|Die Applikation verwendet String-Ressourcen für alle Anzeigen.
+|Die oben beschriebenen funktionalen Anforderungen kann der Nutzer in einer einzigen Activity aufrufen.|10|Usability (Verwendung soll einfach und reibungslos sein; Menüs & Untermenüs nicht notwendig; Hauptfunktionalität im Vordergrund)|Die Applikation kommt mit nur einer Activity (`MainActivity`) aus und verfügt über keine Menüs.
+
+|===
+
+=== Use Case-Diagramm und Akteure
+
+- `User`: Bezeichnet den Nutzer der App, der mit den Front End-Anwendungsfällen interagiert.
+- `MainActivity`: Bezeichnet den «präsentierenden», Front End-verwaltenden Prozess der Applikation.
+- `PositionService`: Dient der Abfragung der Position von `User` und der Berechnung von Distanz und Ausrichtung zum Ziel.
+- `PeakService`: Dient als Schnittstelle zur Liste von Gipfeln, vor allem für Abfragen.
+
+image::usecase.png[]
+
+=== Testkonzept
+
+==== Testumgebung
+
+|===
+| Gerät | Google Pixel 3a; SDK v34
+| Auflösung | 1020 x 2280 @ 400 DPI
+| Android-Version | Android 14.0 «UpsideDownCake» ARM64 v8a
+| Entwicklungsumgebung | Android Studio Hedgehog 2023.1.1 Patch 2 mit OpenJDK 64-Bit 17.0.7 aarch64
+|===
+
+==== Testfälle
+
+|===
+|Titel|ID|Voraussetzung|Durchführung|Erwartung
+|Die `MainActivity` wird korrekt angezeigt.|1|App ist geöffnet|Die `MainActivity` wird aufgerufen|`TextViews` für Name, Höhe und Distanz werden angezeigt. Das Kompasswidget wird angezeigt. Die Checkbox zum Abhaken wird angezeigt.
+|`PeakService` findet den korrekten Gipfel.|2|App ist geöffnet; `PeakService` ist implementiert und läuft.|Eine simulierte Position nahe zu einem bekannten Gipfel wird an `PeakService` übergeben|`PeakService` gibt das `PeakModel` aus, das der simulierten Position am nächsten gelegen und nicht abgehakt ist.
+|`LocationService` gibt Positionsdaten aus.|3|App ist geöffnet; `LocationService` ist implementiert und läuft.|Eine Position und Ausrichtung wird gespooft.|`LocationService` ist in der Lage, die gespoofte Position und Ausrichtung korrekt auszugeben.
+|`PeakModel` lässt sich abhaken.|4|App ist geöffnet; `PeakService` ist implementiert und läuft.|Gipfelliste wird auf drei Einträge in aufsteigender Entfernung limitiert; die Checkbox wird betätigt.|Das Attribut in `PeakModel` wird korrekt geupdatet; die `MainActivity` wird mit dem nächsten Gipfel neu gerendert. Der Vorgang lässt sich wiederholen, womit der dritte Gipfel in der `MainActivity` abgebildet wird.
+
+|===
