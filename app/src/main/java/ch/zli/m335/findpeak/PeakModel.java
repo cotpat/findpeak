@@ -55,4 +55,20 @@ public class PeakModel {
 
         return new double[]{lati, longi};
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public double getLati() {
+        return lati;
+    }
+
+    public double getLongi() {
+        return longi;
+    }
 }
