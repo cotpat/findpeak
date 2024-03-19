@@ -38,19 +38,19 @@ public class PeakModel {
         x = (chLatitude - 1200000) / 1000000;
         y = (chLongitude - 2600000) / 1000000;
 
-        lati = 16.9023892
+        lati = (16.9023892
                 + 3.238272 * x
                 - 0.270978 * Math.pow(y, 2)
                 - 0.002528 * Math.pow(x, 2)
                 - 0.0447 * Math.pow(y, 2) * x
-                - 0.0140 * Math.pow(x, 3)
+                - 0.0140 * Math.pow(x, 3))
         * 100 / 36;
 
-        longi = 2.6779094
+        longi = (2.6779094
                 + 4.728982 * y
                 + 0.791484 * y * x
                 + 0.1306 * y * Math.pow(x, 2)
-                - 0.0436 * Math.pow(y, 3)
+                - 0.0436 * Math.pow(y, 3))
         * 100 / 36;
 
         return new double[]{lati, longi};
