@@ -9,12 +9,15 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Binder;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
 public class LocationService extends Service implements SensorEventListener {
     private final static int SAMPLING_RATE = 10000;
+
+    private final IBinder binder = new LocationBinder();
 
     private SensorManager sensorManager;
     private Sensor magnetometer;
@@ -28,6 +31,14 @@ public class LocationService extends Service implements SensorEventListener {
     private float[] rotationMatrix = new float[9];
     private float[] orientation = new float[3];
 
+    public LocationService() { }
+
+    public class LocationBinder extends Binder {
+        public LocationService getService() {
+            return LocationService.this;
+        }
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -40,7 +51,7 @@ public class LocationService extends Service implements SensorEventListener {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return binder;
     }
 
     private void initializeCompassSensor() {
@@ -100,4 +111,6 @@ public class LocationService extends Service implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+
 }
