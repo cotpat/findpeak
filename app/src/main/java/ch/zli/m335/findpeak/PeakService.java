@@ -52,13 +52,13 @@ public class PeakService extends Service {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(";");
 
-                new PeakModel(
+                PeakModel peakModel = new PeakModel(
                         Integer.parseInt(fields[0]),
                         fields[1],
-                        Double.parseDouble(fields[2]),
-                        Double.parseDouble(fields[3])
+                        Double.parseDouble(fields[3]),
+                        Double.parseDouble(fields[2])
                 );
-                Log.d("CREATE", fields[1]);
+                Log.d("CREATE", peakModel.getName() + " " + peakModel.getHeight() + " " + peakModel.getLati() + " " + peakModel.getLongi());
             }
 
             br.close();
