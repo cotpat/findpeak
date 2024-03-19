@@ -16,7 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationService.CompassCallback {
     private final static int SAMPLING_RATE = 100000;
     private final static int DISPLAY_PERIOD = 30;
 
@@ -58,4 +58,9 @@ public class MainActivity extends AppCompatActivity {
             isPeakServiceBound = false;
         }
     };
+
+    @Override
+    public void onCompassUpdate(float[] magneticValues) {
+        return;
+    }
 }
