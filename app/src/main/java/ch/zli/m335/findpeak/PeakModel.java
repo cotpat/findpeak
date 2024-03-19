@@ -8,7 +8,7 @@ public class PeakModel {
     private double lati;
     private double longi;
     private boolean checked;
-    public ArrayList<PeakModel> PeakModels;
+    public static ArrayList<PeakModel> PeakModels = new ArrayList<>();
 
     public PeakModel(
             int height,
