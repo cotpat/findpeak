@@ -2,7 +2,9 @@ package ch.zli.m335.findpeak;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -14,6 +16,16 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class PeakService extends Service {
+    private final IBinder binder = new PeakBinder();
+
+    public class PeakBinder extends Binder {
+        public PeakService getService() {
+            return PeakService.this;
+        }
+    }
+
+    public PeakService() { }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -31,6 +43,7 @@ public class PeakService extends Service {
                         Double.parseDouble(fields[2]),
                         Double.parseDouble(fields[3])
                         );
+                Log.d("CREATE:", fields[1]);
             }
 
         } catch (IOException e) {
@@ -41,11 +54,6 @@ public class PeakService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
+        return binder;
     }
 }
